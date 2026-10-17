@@ -1,0 +1,116 @@
+.section {
+  position: relative;
+  padding: clamp(96px, 14vw, 180px) 0;
+  background: var(--soft);
+}
+
+.statement {
+  margin-top: 24px;
+  max-width: 22em;
+  font-size: clamp(30px, 4.6vw, 64px);
+  font-weight: 700;
+  font-stretch: var(--wide);
+  letter-spacing: -0.025em;
+  line-height: 1.12;
+  color: var(--ink);
+}
+
+.bento {
+  display: grid;
+  gap: 16px;
+  margin: clamp(56px, 8vw, 96px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  position: relative;
+  display: grid;
+  gap: 16px;
+  min-height: 260px;
+  padding: 28px;
+  border-radius: 32px;
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  inset: auto -30% -50% 30%;
+  height: 80%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(36, 85, 245, 0.12), transparent);
+  z-index: -1;
+}
+
+.cardText {
+  max-width: 22em;
+}
+
+.cardTitle {
+  font-size: clamp(24px, 2.4vw, 32px);
+  line-height: 1.08;
+}
+
+.cardBody {
+  margin-top: 10px;
+  color: var(--ink-2);
+}
+
+.art {
+  justify-self: end;
+  align-self: end;
+  width: 140px;
+  height: 140px;
+  border-radius: 30px;
+  box-shadow: 0 24px 40px -24px rgba(14, 45, 181, 0.5);
+}
+
+.card[data-size='tall'] {
+  background: linear-gradient(160deg, #3a6bff, var(--royal) 55%, var(--deep));
+  color: var(--white);
+}
+
+.card[data-size='tall'] .cardBody {
+  color: var(--on-blue-2);
+}
+
+.card[data-size='tall'] .art {
+  width: 200px;
+  height: 200px;
+}
+
+@media (min-width: 720px) {
+  .bento {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card[data-size='wide'] {
+    grid-column: span 2;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+  }
+}
+
+@media (min-width: 1024px) {
+  .bento {
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: minmax(260px, auto);
+  }
+
+  .card[data-size='tall'] {
+    grid-row: span 2;
+  }
+
+  .card:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .card[data-size='wide'] .art {
+    width: 170px;
+    height: 170px;
+  }
+}

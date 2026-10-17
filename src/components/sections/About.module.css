@@ -1,0 +1,97 @@
+.section {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(96px, 12vw, 160px) 0;
+  background: var(--white);
+}
+
+.marquee {
+  position: absolute;
+  top: clamp(24px, 4vw, 48px);
+  left: 0;
+  white-space: nowrap;
+  font-size: clamp(64px, 11vw, 170px);
+  font-weight: 800;
+  font-stretch: 125%;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1.5px #dbe3fb;
+  pointer-events: none;
+}
+
+.marquee span {
+  display: inline-block;
+}
+
+.grid {
+  position: relative;
+  display: grid;
+  gap: 48px;
+  align-items: center;
+  padding-top: clamp(80px, 10vw, 140px);
+}
+
+.visual {
+  display: grid;
+  place-items: center;
+}
+
+.badgeWrap {
+  position: relative;
+  width: min(440px, 84vw);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+.badge {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.badge text {
+  font-family: var(--font);
+  font-size: 12.5px;
+  font-weight: 650;
+  letter-spacing: 0.22em;
+  fill: var(--royal);
+}
+
+.house {
+  width: 66%;
+  height: auto;
+  border-radius: 48px;
+  box-shadow: 0 40px 70px -40px rgba(14, 45, 181, 0.55);
+}
+
+.title {
+  margin-top: 18px;
+  max-width: 11em;
+}
+
+.text {
+  margin-top: 22px;
+  font-size: 19px;
+  color: var(--ink-2);
+  max-width: 34em;
+}
+
+.by {
+  margin-top: 28px;
+  font-weight: 600;
+}
+
+.by a {
+  color: var(--royal);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr 1.1fr;
+  }
+}

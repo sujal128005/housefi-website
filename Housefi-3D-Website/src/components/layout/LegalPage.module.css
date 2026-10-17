@@ -1,0 +1,32 @@
+.page {
+  padding: calc(var(--header-h) + 80px) 0 120px;
+  min-height: 70vh;
+}
+
+.title {
+  margin-top: 16px;
+  font-size: clamp(40px, 6vw, 72px);
+}
+
+.notice {
+  margin-top: 28px;
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: #fff6e1;
+  color: #5c3f00;
+  max-width: 44em;
+}
+
+.body {
+  display: grid;
+  gap: 16px;
+  margin: 32px 0 40px;
+  max-width: 44em;
+  color: var(--ink-2);
+  font-size: 18px;
+}
+
+.back {
+  font-weight: 650;
+  color: var(--royal);
+}

@@ -1,0 +1,221 @@
+.section {
+  position: relative;
+  z-index: 1;
+  margin-top: -40svh;
+}
+
+.curtain {
+  /* clip, not hidden: hidden would make this a scroll container and stop the sticky panel inside from sticking. */
+  overflow: clip;
+  transform-origin: 50% 0;
+  will-change: transform;
+}
+
+.pin {
+  position: relative;
+}
+
+.sticky {
+  padding: clamp(96px, 12vw, 140px) 0 clamp(80px, 10vw, 120px);
+}
+
+.grid {
+  display: grid;
+  gap: 48px;
+  align-items: center;
+}
+
+.title {
+  margin-top: 18px;
+  max-width: 14em;
+  font-size: clamp(34px, 4.4vw, 60px);
+}
+
+.steps {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  margin: 40px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rail {
+  display: none;
+}
+
+.step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 16px;
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.stepArt {
+  flex: none;
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+}
+
+.stepNo {
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+.stepTitle {
+  margin-top: 2px;
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+.stepBody {
+  margin-top: 6px;
+  color: var(--on-blue-2);
+  font-size: 16px;
+}
+
+.visual {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+}
+
+.halo {
+  position: absolute;
+  inset: 8% 0;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(72, 217, 245, 0.45), rgba(72, 217, 245, 0) 70%);
+  filter: blur(10px);
+}
+
+.phone {
+  position: relative;
+}
+
+.note {
+  position: relative;
+  font-size: 13px;
+  color: var(--on-blue-2);
+}
+
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .pin {
+    height: calc(var(--steps) * 70svh + 100svh);
+  }
+
+  .sticky {
+    position: sticky;
+    top: 0;
+    display: grid;
+    align-items: center;
+    min-height: 100svh;
+    padding: calc(var(--header-h) + 16px) 0 32px;
+  }
+
+  .grid {
+    grid-template-columns: 1.15fr 1fr;
+    gap: 64px;
+  }
+
+  .steps {
+    gap: 4px;
+    margin-top: 32px;
+    padding-left: 28px;
+  }
+
+  .rail {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 12px;
+    bottom: 12px;
+    width: 3px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.18);
+    overflow: hidden;
+  }
+
+  .railFill {
+    display: block;
+    height: 100%;
+    background: linear-gradient(var(--cyan), var(--amber));
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+
+  .step {
+    padding: 12px 16px;
+    background: transparent;
+    box-shadow: none;
+    opacity: 0.45;
+    transition: opacity 0.4s, background-color 0.4s var(--ease-out);
+  }
+
+  .step[data-on='true'] {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+  }
+
+  .stepArt {
+    width: 56px;
+    height: 56px;
+    transition: transform 0.5s var(--ease-out);
+  }
+
+  .step[data-on='true'] .stepArt {
+    transform: scale(1.1) rotate(-5deg);
+  }
+
+  .stepBody {
+    display: grid;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.5s var(--ease-out), opacity 0.4s;
+  }
+
+  .step[data-on='true'] .stepBody {
+    max-height: 120px;
+    opacity: 1;
+  }
+
+  .phone {
+    width: min(320px, 26vw);
+  }
+}
+
+@media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
+  .grid {
+    grid-template-columns: 1.15fr 1fr;
+  }
+}
+
+@media (max-width: 1023px) {
+  .visual {
+    order: -1;
+  }
+
+  .phone {
+    width: min(260px, 64vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stepBody {
+    max-height: none !important;
+    opacity: 1 !important;
+  }
+
+  .step {
+    opacity: 1 !important;
+  }
+}

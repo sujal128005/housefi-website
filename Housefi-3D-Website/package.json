@@ -1,0 +1,40 @@
+{
+  "name": "housefi-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Housefi marketing website: scroll-driven 3D story, services, how it works and app promotion.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "npx serve@14.2.4 out -l 3000",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "check": "npm run lint && npm run typecheck && npm run test && npm run build"
+  },
+  "dependencies": {
+    "@fontsource-variable/anek-latin": "5.3.0",
+    "gsap": "3.15.0",
+    "lucide-react": "1.59.0",
+    "next": "16.3.8",
+    "react": "19.2.9",
+    "react-dom": "19.2.9",
+    "three": "0.186.1"
+  },
+  "engines": {
+    "node": ">=20.9"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "@types/node": "22.20.5",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7",
+    "@types/three": "0.186.0",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.8",
+    "sharp": "0.34.5",
+    "typescript": "6.0.3",
+    "vitest": "4.0.18"
+  }
+}

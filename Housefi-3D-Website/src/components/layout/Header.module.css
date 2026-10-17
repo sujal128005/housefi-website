@@ -1,0 +1,243 @@
+.header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  height: var(--header-h);
+  color: var(--ink);
+  transition: transform 0.45s var(--ease-out), color 0.3s;
+}
+
+.header[data-theme='dark'] {
+  color: var(--white);
+}
+
+.header[data-hidden='true'] {
+  transform: translateY(-110%);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: 100%;
+  max-width: calc(var(--max) + 80px);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.brand {
+  text-decoration: none;
+  border-radius: 14px;
+}
+
+.nav {
+  margin-left: auto;
+  display: none;
+}
+
+.nav ul {
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav a {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  opacity: 0.86;
+  transition: opacity 0.2s, background-color 0.2s;
+}
+
+.nav a:hover {
+  opacity: 1;
+  background: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav + .actions {
+  margin-left: 0;
+}
+
+.cta {
+  display: none;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: var(--royal);
+  color: var(--white);
+  font-size: 15px;
+  font-weight: 650;
+  text-decoration: none;
+  transition: background-color 0.3s, color 0.3s, transform 0.25s var(--ease-out);
+}
+
+.cta:hover {
+  transform: translateY(-1px);
+}
+
+.header[data-theme='dark'] .cta {
+  background: var(--white);
+  color: var(--royal);
+}
+
+.toggle {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, currentColor 10%, transparent);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+}
+
+@media (min-width: 640px) {
+  .cta {
+    display: inline-flex;
+  }
+}
+
+@media (min-width: 1100px) {
+  .nav {
+    display: block;
+  }
+
+  .toggle {
+    display: none;
+  }
+}
+
+/* Full-screen menu */
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  background: radial-gradient(120% 90% at 85% 10%, #3a6bff, var(--royal) 50%, var(--deep));
+  color: var(--white);
+  overflow-y: auto;
+  animation: menuIn 0.5s var(--ease-out) both;
+}
+
+.menu[hidden] {
+  display: none;
+}
+
+@keyframes menuIn {
+  from {
+    clip-path: circle(0% at calc(100% - 44px) 36px);
+  }
+  to {
+    clip-path: circle(150% at calc(100% - 44px) 36px);
+  }
+}
+
+.menuInner {
+  display: grid;
+  gap: 40px;
+  min-height: 100%;
+  max-width: calc(var(--max) + 80px);
+  margin-inline: auto;
+  padding: calc(var(--header-h) + 32px) var(--gutter) 48px;
+  align-content: center;
+}
+
+.menuLinks {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menuLinks li {
+  animation: linkIn 0.6s var(--ease-out) both;
+  animation-delay: calc(0.08s + var(--i) * 0.05s);
+}
+
+@keyframes linkIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+.menuLinks a {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 6px 0;
+  font-size: clamp(36px, 8vw, 72px);
+  font-weight: 750;
+  font-stretch: var(--wide);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity 0.2s, transform 0.3s var(--ease-out);
+}
+
+.menuLinks a:hover,
+.menuLinks a:focus-visible {
+  opacity: 1;
+  transform: translateX(8px);
+}
+
+.menuIndex {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--cyan);
+}
+
+.menuSide {
+  display: grid;
+  gap: 12px;
+  align-content: end;
+}
+
+.menuTag {
+  font-size: 24px;
+  font-weight: 700;
+  font-stretch: var(--wide);
+}
+
+.menuNote {
+  color: var(--on-blue-2);
+}
+
+.menuCta {
+  justify-self: start;
+  margin-top: 8px;
+  padding: 14px 24px;
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--royal);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+@media (min-width: 900px) {
+  .menuInner {
+    grid-template-columns: 1.4fr 1fr;
+    align-items: end;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu,
+  .menuLinks li {
+    animation: none;
+  }
+}
