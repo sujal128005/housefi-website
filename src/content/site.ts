@@ -61,3 +61,6 @@ export const nav = [
   { href: '/technicians/', label: 'For technicians' },
   { href: '/#contact', label: 'Contact' },
 ] as const
+
+/** The logo and the "Get the app" buttons, shown on every page: like `nav`, they lead to the home page from elsewhere. */
+export const homeLinks = { top: '/#top', app: '/#app' } as const

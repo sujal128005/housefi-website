@@ -3,6 +3,7 @@
 // over the app section and the footer (where the same call to action is already on screen).
 import { ArrowUpRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { homeLinks } from '@/content/site'
 import styles from './FloatingCta.module.css'
 
 export function FloatingCta() {
@@ -32,7 +33,7 @@ export function FloatingCta() {
   }, [])
 
   return (
-    <a href="#app" className={styles.card} data-show={show} aria-hidden={!show} tabIndex={show ? 0 : -1}>
+    <a href={homeLinks.app} className={styles.card} data-show={show} aria-hidden={!show} tabIndex={show ? 0 : -1}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img className={styles.badge} src="/brand/housefi-logo-256.webp" alt="" width={46} height={46} />
       <span className={styles.text}>

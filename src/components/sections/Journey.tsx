@@ -5,7 +5,7 @@
 // - With reduced motion, no WebGL, or if the scene fails, the same content renders as a normal hero followed by a
 //   grid of service cards.
 import { ArrowDown, ArrowRight } from 'lucide-react'
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { hero, journey } from '@/content/copy'
 import { services } from '@/content/services'
 import { focusProgress, journeyState, layoutFor, type Layout } from '@/lib/timeline'
@@ -13,9 +13,19 @@ import { reportHeaderTheme, type HeaderTheme } from '@/lib/headerTheme'
 import { ButtonLink } from '../ui/Button'
 import { gsap, ScrollTrigger, MOTION_OK } from '../motion/gsap'
 import type { GlassHouseScene } from '../scene/GlassHouseScene'
+import { webglAvailable } from '../scene/webgl'
 import styles from './Journey.module.css'
 
 type Mode = 'pending' | 'motion' | 'static'
+
+const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
+
+/**
+ * Runs while the page is still loading, before its first paint: switches the section to the animated layout straight
+ * away (unless the visitor asked for reduced motion), so the static layout never flashes up before the scripts load.
+ * The script's own check (and WebGL) still decides afterwards. Same pin lengths as `layoutFor`.
+ */
+const EARLY_MODE = `(function(){try{var s=document.currentScript.parentNode;if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;var w=innerWidth,h=innerHeight;s.style.setProperty('--pin',w>=1024&&w/h>=1.2?9:w>=640?8.2:7.6);s.setAttribute('data-mode','motion')}catch(e){}})()`
 
 export function Journey() {
   const rootRef = useRef<HTMLElement>(null)
@@ -35,18 +45,14 @@ export function Journey() {
   const [mode, setMode] = useState<Mode>('pending')
   const [sceneReady, setSceneReady] = useState(false)
 
-  // Decide between the animated and the static version.
-  useEffect(() => {
+  // Decide between the animated and the static version, before the browser paints (it matters when arriving from
+  // another page of the site; on a fresh load EARLY_MODE has already done it).
+  useIsoLayoutEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const decide = async () => {
-      if (reduced.matches) return setMode('static')
-      const { webglAvailable } = await import('../scene/GlassHouseScene')
-      setMode(webglAvailable() ? 'motion' : 'static')
-    }
-    void decide()
-    const onChange = () => void decide()
-    reduced.addEventListener('change', onChange)
-    return () => reduced.removeEventListener('change', onChange)
+    const decide = () => setMode(!reduced.matches && webglAvailable() ? 'motion' : 'static')
+    decide()
+    reduced.addEventListener('change', decide)
+    return () => reduced.removeEventListener('change', decide)
   }, [])
 
   // Any change of layout mode changes the page height below this section.
@@ -132,9 +138,13 @@ export function Journey() {
         // Used by scripts/render-stills.mjs to export the poster images (no effect otherwise).
         if (new URLSearchParams(window.location.search).has('stills')) (window as Window & { __housefiScene?: GlassHouseScene }).__housefiScene = scene
         scene.setProgress(proxy.p)
+        // The poster stays up while the first frame's shaders compile in the background; then the rest of the story's.
+        await scene.prepare()
+        if (disposed) return
         io = new IntersectionObserver(([e]) => (e?.isIntersecting ? scene.start() : scene.stop()), { rootMargin: '100px' })
         io.observe(root)
         requestAnimationFrame(() => requestAnimationFrame(() => !disposed && setSceneReady(true)))
+        void scene.warmUp().then(() => !disposed && canvas.setAttribute('data-warm', ''))
       } catch (err) {
         console.error('Housefi: 3D scene unavailable, showing the static version.', err)
         if (!disposed) setMode('static')
@@ -179,7 +189,9 @@ export function Journey() {
   }
 
   return (
-    <section ref={rootRef} id="top" className={styles.journey} data-mode={mode} data-hide-floating-cta-narrow aria-label="Housefi">
+    // EARLY_MODE may change data-mode and --pin before React loads; React sets both itself right after.
+    <section ref={rootRef} id="top" className={styles.journey} data-mode={mode} data-hide-floating-cta-narrow aria-label="Housefi" suppressHydrationWarning>
+      <script dangerouslySetInnerHTML={{ __html: EARLY_MODE }} />
       {/* In-flow anchors for the in-page navigation (the stage itself is sticky). */}
       <span id="services" className={styles.anchor} style={{ '--at': focusProgress(0) - 0.06 } as CSSProperties} aria-hidden="true" />
 

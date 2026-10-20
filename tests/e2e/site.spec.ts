@@ -119,3 +119,22 @@ test('the founders have their own page', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1 })).toContainText('The people behind Housefi.')
   await expect(page.locator('#founders')).toHaveCount(1)
 })
+
+test('the animated opening is there before the scripts load (no flash of the simple version)', async ({ page }) => {
+  await page.route((url) => url.pathname.startsWith('/_next/static/chunks/') && url.pathname.endsWith('.js'), (r) => r.abort())
+  await page.goto('/')
+  await expect(page.locator('#top')).toHaveAttribute('data-mode', 'motion')
+  await expect(page.locator('#top img[src*="glass-house"]')).toBeHidden()
+})
+
+test('links to parts of the home page work from every page', async ({ page }) => {
+  const targets = new Set<string>()
+  for (const path of ['/founders/', '/technicians/', '/privacy/', '/terms/']) {
+    await page.goto(path)
+    const hrefs = await page.$$eval('a[href^="#"]', (as) => as.map((a) => a.getAttribute('href')!))
+    for (const h of hrefs) await expect(page.locator(h), `${path} ${h}`).toHaveCount(1)
+    for (const h of await page.$$eval('a[href^="/#"]', (as) => as.map((a) => a.getAttribute('href')!))) targets.add(h.slice(1))
+  }
+  await page.goto('/')
+  for (const h of targets) await expect(page.locator(h), h).toHaveCount(1)
+})
