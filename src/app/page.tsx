@@ -3,7 +3,6 @@ import { HowItWorks } from '@/components/sections/HowItWorks'
 import { WhyHousefi } from '@/components/sections/WhyHousefi'
 import { AppPromo } from '@/components/sections/AppPromo'
 import { About } from '@/components/sections/About'
-import { Founders } from '@/components/sections/Founders'
 import { Faq } from '@/components/sections/Faq'
 import { site } from '@/content/site'
 
@@ -25,7 +24,6 @@ export default function Home() {
       <WhyHousefi />
       <AppPromo />
       <About />
-      <Founders />
       <Faq />
     </>
   )

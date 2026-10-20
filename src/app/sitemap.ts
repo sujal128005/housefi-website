@@ -4,5 +4,5 @@ import { site } from '@/content/site'
 export const dynamic = 'force-static'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return ['/', '/technicians/', '/privacy/', '/terms/'].map((path) => ({ url: new URL(path, site.url).toString(), changeFrequency: 'monthly' }))
+  return ['/', '/technicians/', '/founders/', '/privacy/', '/terms/'].map((path) => ({ url: new URL(path, site.url).toString(), changeFrequency: 'monthly' }))
 }

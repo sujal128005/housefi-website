@@ -16,7 +16,8 @@ function LinkedInMark() {
   )
 }
 
-export function Founders() {
+/** `page`: the section is the whole page (/founders/), so its title is the page's h1 and it clears the header. */
+export function Founders({ page = false }: { readonly page?: boolean }) {
   const ref = useRef<HTMLElement>(null)
 
   useScrollScene(ref, (el) => {
@@ -51,13 +52,19 @@ export function Founders() {
   }
 
   return (
-    <section ref={ref} id="founders" className={styles.section} data-header-theme="light" aria-labelledby="founders-title">
+    <section ref={ref} id="founders" className={`${styles.section}${page ? ` ${styles.page}` : ''}`} data-header-theme="light" aria-labelledby="founders-title">
       <div className="container">
         <div className={styles.head}>
           <p className="eyebrow">Founders</p>
-          <h2 id="founders-title" className={`section-title ${styles.title}`}>
-            The people behind Housefi.
-          </h2>
+          {page ? (
+            <h1 id="founders-title" className={`section-title ${styles.title}`}>
+              The people behind Housefi.
+            </h1>
+          ) : (
+            <h2 id="founders-title" className={`section-title ${styles.title}`}>
+              The people behind Housefi.
+            </h2>
+          )}
         </div>
         <ul className={styles.list}>
           {founders.map((f, i) => (

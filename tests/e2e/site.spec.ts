@@ -21,7 +21,7 @@ test('home page loads with its sections and no errors', async ({ page }) => {
   const errors = await collectErrors(page)
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Your Home.')
-  for (const id of ['top', 'services', 'how-it-works', 'why-housefi', 'app', 'about', 'founders', 'faq', 'contact']) {
+  for (const id of ['top', 'services', 'how-it-works', 'why-housefi', 'app', 'about', 'faq', 'contact']) {
     await expect(page.locator(`#${id}`)).toHaveCount(1)
   }
   await scrollThrough(page)
@@ -112,4 +112,10 @@ test('legal pages exist and say they are drafts', async ({ page }) => {
     await page.goto(path)
     await expect(page.getByText('Draft placeholder.')).toBeVisible()
   }
+})
+
+test('the founders have their own page', async ({ page }) => {
+  await page.goto('/founders/')
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('The people behind Housefi.')
+  await expect(page.locator('#founders')).toHaveCount(1)
 })

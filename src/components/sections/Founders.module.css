@@ -8,6 +8,11 @@
     var(--soft);
 }
 
+.page {
+  padding-top: calc(var(--header-h) + clamp(56px, 8vw, 110px));
+  min-height: 100vh;
+}
+
 .head {
   max-width: 760px;
 }
