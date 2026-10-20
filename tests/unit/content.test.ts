@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { site } from '@/content/site'
 import { services } from '@/content/services'
 import * as copy from '@/content/copy'
+import * as technicians from '@/content/technicians'
 
 const publicFile = (p: string) => join(process.cwd(), 'public', p)
 
@@ -32,10 +33,11 @@ describe('content', () => {
       expect(existsSync(publicFile(s.screen)), s.screen).toBe(true)
     }
     for (const c of copy.why.cards) expect(existsSync(publicFile(c.art)), c.art).toBe(true)
+    for (const x of [...technicians.joinSteps, ...technicians.joinBenefits]) expect(existsSync(publicFile(x.art)), x.art).toBe(true)
   })
 
   it('makes no unverified claims (prices, counts, ratings, guarantees, certifications)', () => {
-    const text = JSON.stringify(copy) + JSON.stringify(services) + site.description
+    const text = JSON.stringify(copy) + JSON.stringify(services) + JSON.stringify(technicians) + site.description
     expect(text).not.toMatch(/₹|\brs\.?\s?\d|\$\d/i)
     expect(text).not.toMatch(/\d[\d,.]*\s*(\+|k\b|customers|users|homes|technicians|cities|ratings?|reviews?)/i)
     expect(text).not.toMatch(/guarantee|certified|award|best in|#1|number one|insured/i)

@@ -1,0 +1,264 @@
+/* "Become a Housefi technician": hero, steps, benefits, what you need + questions, and a closing call. */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: calc(var(--header-h) + clamp(48px, 8vw, 110px)) 0 clamp(64px, 9vw, 120px);
+}
+
+.heroGrid {
+  display: grid;
+  gap: 40px;
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .heroGrid {
+    grid-template-columns: 1.3fr 1fr;
+  }
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+.title {
+  margin: 16px 0 0;
+  font-size: clamp(40px, 7vw, 84px);
+  font-stretch: var(--wide);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.lead {
+  margin-top: 22px;
+  max-width: 34em;
+  font-size: clamp(18px, 1.6vw, 21px);
+  color: var(--on-blue-2);
+}
+
+.cta {
+  margin-top: 32px;
+  display: grid;
+  gap: 12px;
+}
+
+.ctaNote {
+  margin: 0;
+  color: var(--on-blue-2);
+  font-size: 15px;
+}
+
+.heroArt {
+  justify-self: center;
+  filter: drop-shadow(0 40px 60px rgba(10, 26, 110, 0.55));
+  animation: drift 7s ease-in-out infinite;
+}
+
+.heroArt img {
+  width: min(360px, 70vw);
+  height: auto;
+}
+
+@keyframes drift {
+  50% {
+    transform: translateY(-14px) rotate(-2deg);
+  }
+}
+
+.section {
+  padding: clamp(72px, 10vw, 130px) 0;
+}
+
+.tint {
+  background: var(--mist);
+}
+
+.h2 {
+  margin: 12px 0 0;
+  font-size: clamp(30px, 4.6vw, 56px);
+  font-stretch: var(--wide);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.h3 {
+  margin: 0 0 16px;
+  font-size: 24px;
+}
+
+.steps {
+  margin: 44px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 18px;
+}
+
+@media (min-width: 760px) {
+  .steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1100px) {
+  .steps {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.step {
+  position: relative;
+  padding: 28px 24px;
+  border-radius: var(--radius);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+}
+
+.step h3 {
+  margin: 14px 0 6px;
+  font-size: 20px;
+}
+
+.step p,
+.benefit p {
+  margin: 0;
+  color: var(--ink-2);
+}
+
+.stepNo {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  color: var(--white);
+  background: var(--royal);
+}
+
+.benefits {
+  margin-top: 44px;
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 760px) {
+  .benefits {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1100px) {
+  .benefits {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.benefit {
+  display: flex;
+  gap: 16px;
+  padding: 22px;
+  border-radius: var(--radius);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+}
+
+.benefit h3 {
+  margin: 0 0 6px;
+  font-size: 19px;
+}
+
+.needGrid {
+  display: grid;
+  gap: 48px;
+}
+
+@media (min-width: 900px) {
+  .needGrid {
+    grid-template-columns: 1fr 1.2fr;
+  }
+}
+
+.needs {
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+
+.needs li {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.needs li::before {
+  content: '✓';
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  font-size: 14px;
+  color: var(--white);
+  background: var(--royal);
+}
+
+.faq {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.qa {
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+  padding: 18px 20px;
+}
+
+.qa summary {
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.qa p {
+  margin: 10px 0 0;
+  color: var(--ink-2);
+}
+
+.final {
+  padding: clamp(72px, 10vw, 120px) 0;
+  text-align: center;
+}
+
+.final .lead {
+  margin-inline: auto;
+  margin-bottom: 28px;
+}
+
+.final ul {
+  justify-content: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroArt {
+    animation: none;
+  }
+}
