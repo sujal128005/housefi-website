@@ -57,7 +57,7 @@ export const nav = [
   { href: '/#why-housefi', label: 'Why Housefi' },
   { href: '/#app', label: 'The app' },
   { href: '/#about', label: 'About' },
-  { href: '/#founders', label: 'Founders' },
+  { href: '/founders/', label: 'Founders' },
   { href: '/technicians/', label: 'For technicians' },
   { href: '/#contact', label: 'Contact' },
 ] as const
