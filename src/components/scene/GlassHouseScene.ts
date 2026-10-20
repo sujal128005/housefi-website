@@ -41,6 +41,10 @@ export class GlassHouseScene {
   /** Recent frame costs, to step quality down on devices that cannot keep up. */
   private frameCosts: number[] = []
   private degraded = 0
+  private disposed = false
+  private lastDraw = 0
+  /** Stands in for three.js's glass (transmission) render target when compiling ahead. */
+  private readonly glassPass = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType })
 
   constructor(canvas: HTMLCanvasElement, private readonly options: SceneOptions) {
     this.canvas = canvas
@@ -112,10 +116,49 @@ export class GlassHouseScene {
     }
     canvas.addEventListener('webglcontextlost', this.onLost)
     this.resize()
-    // Compile every material's shaders up front (in the background where supported), so the first scroll into a
-    // new part of the story does not stall on shader compilation.
-    this.apply(journeyState(0.6, this.layout), 0)
-    void this.renderer.compileAsync(this.scene, this.camera).catch(() => undefined).finally(() => (this.dirty = true))
+  }
+
+  /**
+   * Compiles the shaders for the opening frame without blocking the page (the first frame would otherwise compile them
+   * on the main thread, which freezes the page for seconds on some laptops). Call before `start()`.
+   */
+  async prepare(): Promise<void> {
+    await Promise.all(this.compileAt(this.progress, false))
+    this.dirty = true
+  }
+
+  /**
+   * Compiles every shader the rest of the story needs, in the background, so scrolling into a new part never stalls.
+   * The story changes which objects show and how their materials look as it goes, so it steps through it in order,
+   * one step at a time, so the compiling never crowds out the frames being drawn.
+   */
+  async warmUp(steps = 20): Promise<void> {
+    for (let i = 0; i <= steps && !this.disposed; i++) await Promise.all(this.compileAt(i / steps, true))
+    this.dirty = true
+  }
+
+  /**
+   * Starts compiling (with KHR_parallel_shader_compile, off the main thread) the programs for the frame at progress p,
+   * for the screen and, with `glass`, for the glass pass: three.js draws the scene behind glass into a render target
+   * without tone mapping, which needs its own variant of every material. The scene is put back before returning, so
+   * the render loop never sees the borrowed state.
+   */
+  private compileAt(p: number, glass: boolean): Promise<unknown>[] {
+    const { renderer } = this
+    const current = this.progress
+    this.progress = p
+    this.apply(journeyState(p, this.layout), 0)
+    const jobs = [renderer.compileAsync(this.scene, this.camera)]
+    if (glass) {
+      const target = renderer.getRenderTarget()
+      renderer.setRenderTarget(this.glassPass)
+      jobs.push(renderer.compileAsync(this.scene, this.camera))
+      renderer.setRenderTarget(target)
+    }
+    this.progress = current
+    this.apply(journeyState(current, this.layout), 0)
+    this.dirty = true
+    return jobs.map((j) => j.catch(() => undefined))
   }
 
   setProgress(p: number): void {
@@ -140,7 +183,10 @@ export class GlassHouseScene {
     const loop = (time: number) => {
       if (!this.running) return
       const idle = this.progress < 0.02
-      if (this.dirty || idle) {
+      // The idle float is slow, so about 30 frames a second is enough for it; that leaves the GPU room for the
+      // shaders still compiling in the background.
+      if (this.dirty || (idle && time - this.lastDraw > 30)) {
+        this.lastDraw = time
         const t0 = performance.now()
         this.apply(journeyState(this.progress, this.layout), idle ? time / 1000 : 0)
         this.renderer.render(this.scene, this.camera)
@@ -165,7 +211,9 @@ export class GlassHouseScene {
   }
 
   dispose(): void {
+    this.disposed = true
     this.stop()
+    this.glassPass.dispose()
     this.canvas.removeEventListener('webglcontextlost', this.onLost)
     disposeTree(this.scene)
     resetLogoParts()
@@ -250,13 +298,4 @@ export function detectQuality(): Quality {
   const smallTouch = window.matchMedia('(pointer: coarse)').matches && Math.min(window.innerWidth, window.innerHeight) < 500
   if (cores <= 4 || memory <= 4 || nav.connection?.saveData || smallTouch) return 'low'
   return 'high'
-}
-
-export function webglAvailable(): boolean {
-  try {
-    const c = document.createElement('canvas')
-    return !!(c.getContext('webgl2') || c.getContext('webgl'))
-  } catch {
-    return false
-  }
 }

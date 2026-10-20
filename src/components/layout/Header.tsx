@@ -3,7 +3,7 @@
 // background underneath (cobalt sections → white text).
 import { Menu, X } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
-import { nav, site } from '@/content/site'
+import { homeLinks, nav, site } from '@/content/site'
 import { onHeaderTheme, type HeaderTheme } from '@/lib/headerTheme'
 import { Logo } from '../ui/Logo'
 import styles from './Header.module.css'
@@ -85,7 +85,7 @@ export function Header() {
     <>
       <header className={styles.header} data-theme={open ? 'dark' : theme} data-hidden={hidden && !open}>
         <div className={styles.inner}>
-          <a href="#top" className={styles.brand} aria-label={`${site.name}, back to top`} onClick={() => setOpen(false)}>
+          <a href={homeLinks.top} className={styles.brand} aria-label={`${site.name}, back to top`} onClick={() => setOpen(false)}>
             <Logo />
           </a>
           <nav aria-label="Main" className={styles.nav}>
@@ -98,7 +98,7 @@ export function Header() {
             </ul>
           </nav>
           <div className={styles.actions}>
-            <a href="#app" className={styles.cta}>
+            <a href={homeLinks.app} className={styles.cta}>
               Get the app
             </a>
             <button
@@ -131,7 +131,7 @@ export function Header() {
           <div className={styles.menuSide}>
             <p className={styles.menuTag}>{site.tagline}</p>
             <p className={styles.menuNote}>Bookings happen in the Housefi app.</p>
-            <a href="#app" className={styles.menuCta} onClick={() => setOpen(false)}>
+            <a href={homeLinks.app} className={styles.menuCta} onClick={() => setOpen(false)}>
               Get the app
             </a>
           </div>
