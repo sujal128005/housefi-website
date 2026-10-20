@@ -50,12 +50,14 @@ export const site = {
 export type Site = typeof site
 
 /** Main navigation (in-page sections). */
+// "/#…" so the links also work from the other pages (on the home page they just scroll).
 export const nav = [
-  { href: '#services', label: 'Services' },
-  { href: '#how-it-works', label: 'How it works' },
-  { href: '#why-housefi', label: 'Why Housefi' },
-  { href: '#app', label: 'The app' },
-  { href: '#about', label: 'About' },
-  { href: '#founders', label: 'Founders' },
-  { href: '#contact', label: 'Contact' },
+  { href: '/#services', label: 'Services' },
+  { href: '/#how-it-works', label: 'How it works' },
+  { href: '/#why-housefi', label: 'Why Housefi' },
+  { href: '/#app', label: 'The app' },
+  { href: '/#about', label: 'About' },
+  { href: '/#founders', label: 'Founders' },
+  { href: '/technicians/', label: 'For technicians' },
+  { href: '/#contact', label: 'Contact' },
 ] as const
