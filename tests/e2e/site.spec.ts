@@ -138,3 +138,33 @@ test('links to parts of the home page work from every page', async ({ page }) =>
   await page.goto('/')
   for (const h of targets) await expect(page.locator(h), h).toHaveCount(1)
 })
+
+test('the Technician ID check shows the Skill Passport only when the API sends it', async ({ page }) => {
+  const base = {
+    techCode: 'N9-HF-T-ABC234', displayName: 'Swathi N.', photo: null, gender: 'F', verification: 'APPROVED', simulated: false,
+    active: true, checkedAt: Date.UTC(2026, 9, 24, 6), fictional: false, verifiedSkills: ['PLUMBING'], certifications: [{ kind: 'ITI', title: 'ITI Plumber 2019' }],
+  }
+  const passport = {
+    memberSince: Date.UTC(2026, 5, 1), experienceYears: 5, city: 'Hyderabad', level: 'SKILLED', jobsDone: 42, rating: 4.8, ratingCount: 30,
+    trades: [{ categoryId: 'PLUMBING', provenBy: 'EXAM', examPoints: 40, examMaxPoints: 50, at: 1 }],
+    courses: [{ title: 'Fixing leaking taps', at: 1 }], certificates: [{ kind: 'ITI', title: 'ITI Plumber 2019' }],
+  }
+  let answer: object = base
+  await page.route('**/v1/verify/technicians/**', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(answer) }))
+
+  await page.goto('/t/#AAAAAAAAAAAAAAAAAAAAAAAA')
+  await expect(page.getByText('Verified · working for Housefi now')).toBeVisible()
+  await expect(page.getByText('✓ Plumbing')).toBeVisible()
+  await expect(page.getByText('ITI Plumber 2019')).toBeVisible()
+  await expect(page.getByTestId('skill-passport')).toHaveCount(0)
+
+  answer = { ...base, passport }
+  await page.goto('/t/#BBBBBBBBBBBBBBBBBBBBBBBB')
+  const card = page.getByTestId('skill-passport')
+  await expect(card).toBeVisible()
+  await expect(card).toContainText('With Housefi since June 2026 · Hyderabad · Skilled')
+  await expect(card).toContainText('42')
+  await expect(card).toContainText('★ 4.8')
+  await expect(card).toContainText('Passed the Housefi skill exam (score 40/50)')
+  await expect(card).toContainText('Fixing leaking taps')
+})
